@@ -19,7 +19,7 @@
       position: relative;
       width: 600px;
       height: 600px;
-      background-image: url('https://i.imgur.com/GN6oi7J.png'); /* 새 지도 이미지 */
+      background-image: url('https://i.imgur.com/oNYHw3x.png'); /* 숫자 없는 심플 지도 이미지 */
       background-size: cover;
       border: 2px solid #555;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -48,7 +48,7 @@
       text-shadow: 0 0 2px white;
     }
     #sidebar {
-      width: 300px;
+      width: 320px;
     }
     h1 {
       margin-bottom: 10px;
@@ -146,6 +146,14 @@
         <option value="#7f8c8d" style="color:#7f8c8d;">회색</option>
       </select>
 
+      <label for="category">카테고리</label>
+      <select id="category" required>
+        <option value="지원조">지원조</option>
+        <option value="1조">1조</option>
+        <option value="2조">2조</option>
+        <option value="3조">3조</option>
+      </select>
+
       <button type="submit">추가</button>
     </form>
 
@@ -171,10 +179,8 @@
     const form = document.getElementById('marker-form');
     const map = document.getElementById('map-container');
 
-    // 저장된 마커 불러오기
     let savedMarkers = JSON.parse(localStorage.getItem('markers') || '[]');
 
-    // 카테고리별 리스트 요소
     const categoryLists = {
       '지원조': document.getElementById('list-support'),
       '1조': document.getElementById('list-team1'),
@@ -182,9 +188,7 @@
       '3조': document.getElementById('list-team3'),
     };
 
-    // 마커 그리기 & 리스트에 추가
     function drawMarker({ name, x, y, color, category }) {
-      // 지도 마커 생성
       const marker = document.createElement('div');
       marker.className = 'marker';
       marker.style.left = x + 'px';
@@ -211,7 +215,7 @@
 
       map.appendChild(marker);
 
-      // 리스트에도 추가
+      // 리스트에 추가
       if(categoryLists[category]) {
         const li = document.createElement('li');
         li.textContent = `${name} (${x}, ${y})`;
@@ -219,20 +223,17 @@
       }
     }
 
-    // 로컬스토리지에 저장
     function saveMarker(marker) {
       savedMarkers.push(marker);
       localStorage.setItem('markers', JSON.stringify(savedMarkers));
     }
 
-    // 삭제 함수
     function deleteMarker(name, x, y, category) {
       savedMarkers = savedMarkers.filter(m =>
         !(m.name === name && m.x === x && m.y === y && m.category === category)
       );
       localStorage.setItem('markers', JSON.stringify(savedMarkers));
 
-      // 리스트에서 삭제
       if(categoryLists[category]) {
         const lis = categoryLists[category].querySelectorAll('li');
         lis.forEach(li => {
@@ -243,7 +244,21 @@
       }
     }
 
-    // 폼 제출 처리
+    // 저장된 마커 다시 불러오기 및 그리기
+    function loadMarkers() {
+      // 리스트 초기화
+      for(let cat in categoryLists) {
+        categoryLists[cat].innerHTML = '';
+      }
+      // 지도에서 기존 마커 다 제거
+      while(map.firstChild) {
+        map.removeChild(map.firstChild);
+      }
+      savedMarkers.forEach(drawMarker);
+    }
+
+    loadMarkers();
+
     form.addEventListener('submit', e => {
       e.preventDefault();
 
@@ -251,14 +266,27 @@
       const x = parseInt(document.getElementById('x').value);
       const y = parseInt(document.getElementById('y').value);
       const color = document.getElementById('color').value;
+      const category = document.getElementById('category').value;
 
-      // 카테고리 자동 분류 (색상별로 분류해볼까요?)
-      // 색상-카테고리 맵 예시 (원하시면 직접 바꾸셔도 됨)
-      const colorCategoryMap = {
-        '#e74c3c': '지원조',
-        '#e67e22': '1조',
-        '#f1c40f': '2조',
-        '#2ecc71': '3조',
-        '#1abc9c': '지원조',
-        '#3498db': '1조',
-        '#
+      if(x < 0 || x > 600 || y < 0 || y > 600) {
+        alert('좌표는 0에서 600 사이여야 합니다.');
+        return;
+      }
+
+      const newMarker = { name, x, y, color, category };
+      drawMarker(newMarker);
+      saveMarker(newMarker);
+      form.reset();
+    });
+
+    // 지도 클릭 시 좌표 자동 입력
+    map.addEventListener('click', e => {
+      const rect = map.getBoundingClientRect();
+      const x = Math.floor(e.clientX - rect.left);
+      const y = Math.floor(e.clientY - rect.top);
+      document.getElementById('x').value = x;
+      document.getElementById('y').value = y;
+    });
+  </script>
+</body>
+</html>
