@@ -48,12 +48,12 @@
   <div id="map-container"></div>
 
   <form id="marker-form">
-    ÀÌ¸§: <input type="text" id="name" required />
+    ì´ë¦„: <input type="text" id="name" required />
     X: <input type="number" id="x" min="0" max="600" required />
     Y: <input type="number" id="y" min="0" max="600" required />
-    »ö»ó:
+    ìƒ‰ìƒ:
     <input type="color" id="color" value="#ff0000" />
-    <button type="submit">Ãß°¡</button>
+    <button type="submit">ì¶”ê°€</button>
   </form>
 
   <script>
@@ -71,7 +71,7 @@
       const color = document.getElementById('color').value;
 
       if (x < 0 || x > 600 || y < 0 || y > 600) {
-        alert("ÁÂÇ¥´Â 0~600 »çÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+        alert("ì¢Œí‘œëŠ” 0~600 ì‚¬ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
         return;
       }
 
@@ -88,10 +88,10 @@
       marker.style.top = y + 'px';
       marker.style.backgroundColor = color;
       marker.textContent = name;
-      marker.title = 'Å¬¸¯ÇÏ¸é »èÁ¦µË´Ï´Ù';
+      marker.title = 'í´ë¦­í•˜ë©´ ì‚­ì œë©ë‹ˆë‹¤';
 
       marker.addEventListener('click', () => {
-        if (confirm(`'${name}' ¸¶Ä¿¸¦ »èÁ¦ÇÒ±î¿ä?`)) {
+        if (confirm(`'${name}' ë§ˆì»¤ë¥¼ ì‚­ì œí• ê¹Œìš”?`)) {
           marker.remove();
           deleteMarker(name, x, y);
         }
@@ -112,7 +112,7 @@
       localStorage.setItem('markers', JSON.stringify(markers));
     }
 
-    // Áöµµ Å¬¸¯ ½Ã ÁÂÇ¥ ÀÚµ¿ ÀÔ·Â
+    // ì§€ë„ í´ë¦­ ì‹œ ì¢Œí‘œ ìë™ ì…ë ¥
     map.addEventListener('click', (e) => {
       const rect = map.getBoundingClientRect();
       const x = Math.floor(e.clientX - rect.left);
