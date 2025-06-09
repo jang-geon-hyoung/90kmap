@@ -2,10 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>90K Map - ¿¬¸Í À§Ä¡ Ç¥½Ã</title>
+  <title>90K Map - ì—°ë§¹ ìœ„ì¹˜ í‘œì‹œ</title>
   <style>
     body {
-      font-family: 'Malgun Gothic', '¸¼Àº °íµñ', 'Nanum Gothic', ³ª´®°íµñ, µ¸¿ò, Dotum, Helvetica, Arial, sans-serif;
+      font-family: 'Malgun Gothic', 'ë§‘ì€ ê³ ë”•', 'Nanum Gothic', ë‚˜ëˆ”ê³ ë”•, ë‹ì›€, Dotum, Helvetica, Arial, sans-serif;
       margin: 20px;
       display: flex;
       justify-content: center;
@@ -95,38 +95,38 @@
   <div id="map-container"></div>
 
   <div id="sidebar">
-    <h2>¸¶Ä¿ µî·Ï</h2>
+    <h2>ë§ˆì»¤ ë“±ë¡</h2>
     <form id="marker-form">
-      ÀÌ¸§: <input type="text" id="name" required placeholder="ÀÌ¸§" />
+      ì´ë¦„: <input type="text" id="name" required placeholder="ì´ë¦„" />
       X: <input type="number" id="x" min="0" max="600" required />
       Y: <input type="number" id="y" min="0" max="600" required />
-      »ö»ó: <input type="color" id="color" value="#ff0000" />
-      Ä«Å×°í¸®:
+      ìƒ‰ìƒ: <input type="color" id="color" value="#ff0000" />
+      ì¹´í…Œê³ ë¦¬:
       <select id="category" required>
-        <option value="">¼±ÅÃ</option>
-        <option value="¿¬¸Í">¿¬¸Í</option>
-        <option value="ÆÀ">ÆÀ</option>
-        <option value="±âÁö">±âÁö</option>
-        <option value="±âÅ¸">±âÅ¸</option>
+        <option value="">ì„ íƒ</option>
+        <option value="ì—°ë§¹">ì—°ë§¹</option>
+        <option value="íŒ€">íŒ€</option>
+        <option value="ê¸°ì§€">ê¸°ì§€</option>
+        <option value="ê¸°íƒ€">ê¸°íƒ€</option>
       </select>
-      <button type="submit">Ãß°¡</button>
+      <button type="submit">ì¶”ê°€</button>
     </form>
 
     <div class="category">
-      <h2>¿¬¸Í</h2>
-      <ul id="list-¿¬¸Í"></ul>
+      <h2>ì—°ë§¹</h2>
+      <ul id="list-ì—°ë§¹"></ul>
     </div>
     <div class="category">
-      <h2>ÆÀ</h2>
-      <ul id="list-ÆÀ"></ul>
+      <h2>íŒ€</h2>
+      <ul id="list-íŒ€"></ul>
     </div>
     <div class="category">
-      <h2>±âÁö</h2>
-      <ul id="list-±âÁö"></ul>
+      <h2>ê¸°ì§€</h2>
+      <ul id="list-ê¸°ì§€"></ul>
     </div>
     <div class="category">
-      <h2>±âÅ¸</h2>
-      <ul id="list-±âÅ¸"></ul>
+      <h2>ê¸°íƒ€</h2>
+      <ul id="list-ê¸°íƒ€"></ul>
     </div>
   </div>
 
@@ -134,7 +134,7 @@
     const map = document.getElementById('map-container');
     const form = document.getElementById('marker-form');
 
-    // ÀúÀåµÈ ¸¶Ä¿ ºÒ·¯¿À±â (localStorage)
+    // ì €ì¥ëœ ë§ˆì»¤ ë¶ˆëŸ¬ì˜¤ê¸° (localStorage)
     let markers = JSON.parse(localStorage.getItem('markers') || '[]');
 
     function saveMarkers() {
@@ -157,10 +157,10 @@
       marker.appendChild(dot);
       marker.appendChild(label);
 
-      marker.title = `${name} (${category})\nÅ¬¸¯ÇÏ¸é »èÁ¦µË´Ï´Ù.`;
+      marker.title = `${name} (${category})\ní´ë¦­í•˜ë©´ ì‚­ì œë©ë‹ˆë‹¤.`;
 
       marker.addEventListener('click', () => {
-        if(confirm(`'${name}' ¸¶Ä¿¸¦ »èÁ¦ÇÒ±î¿ä?`)) {
+        if(confirm(`'${name}' ë§ˆì»¤ë¥¼ ì‚­ì œí• ê¹Œìš”?`)) {
           map.removeChild(marker);
           markers = markers.filter(m => !(m.name === name && m.x === x && m.y === y && m.category === category));
           saveMarkers();
@@ -181,9 +181,9 @@
       markers.forEach(drawMarker);
     }
 
-    // Ä«Å×°í¸®º° ¸®½ºÆ® ·»´õ¸µ
+    // ì¹´í…Œê³ ë¦¬ë³„ ë¦¬ìŠ¤íŠ¸ ë Œë”ë§
     function renderLists() {
-      const categories = ['¿¬¸Í', 'ÆÀ', '±âÁö', '±âÅ¸'];
+      const categories = ['ì—°ë§¹', 'íŒ€', 'ê¸°ì§€', 'ê¸°íƒ€'];
       categories.forEach(cat => {
         const ul = document.getElementById(`list-${cat}`);
         ul.innerHTML = '';
@@ -193,7 +193,7 @@
           li.style.color = m.color;
           li.title = `(${m.x}, ${m.y})`;
           li.addEventListener('click', () => {
-            alert(`${m.name}\nÄ«Å×°í¸®: ${m.category}\nÁÂÇ¥: (${m.x}, ${m.y})`);
+            alert(`${m.name}\nì¹´í…Œê³ ë¦¬: ${m.category}\nì¢Œí‘œ: (${m.x}, ${m.y})`);
           });
           ul.appendChild(li);
         });
@@ -209,15 +209,15 @@
       const category = form.category.value;
 
       if(!name) {
-        alert('ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.');
+        alert('ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.');
         return;
       }
       if(isNaN(x) || x < 0 || x > 600 || isNaN(y) || y < 0 || y > 600) {
-        alert('ÁÂÇ¥´Â 0~600 »çÀÌ¿©¾ß ÇÕ´Ï´Ù.');
+        alert('ì¢Œí‘œëŠ” 0~600 ì‚¬ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.');
         return;
       }
       if(!category) {
-        alert('Ä«Å×°í¸®¸¦ ¼±ÅÃÇØÁÖ¼¼¿ä.');
+        alert('ì¹´í…Œê³ ë¦¬ë¥¼ ì„ íƒí•´ì£¼ì„¸ìš”.');
         return;
       }
 
@@ -230,7 +230,7 @@
       form.reset();
     });
 
-    // Áöµµ Å¬¸¯ÇÏ¸é ÁÂÇ¥ ÀÔ·Â
+    // ì§€ë„ í´ë¦­í•˜ë©´ ì¢Œí‘œ ì…ë ¥
     map.addEventListener('click', e => {
       const rect = map.getBoundingClientRect();
       const x = Math.floor(e.clientX - rect.left);
@@ -239,7 +239,7 @@
       form.y.value = y;
     });
 
-    // ÃÊ±â ·»´õ¸µ
+    // ì´ˆê¸° ë Œë”ë§
     renderMarkers();
     renderLists();
   </script>
