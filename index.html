@@ -20,8 +20,7 @@
       width: 600px;
       height: 600px;
       background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/World_map_blank_without_borders.svg/600px-World_map_blank_without_borders.svg.png');
-  background-size: cover;
-}
+      background-size: cover;
       border: 2px solid #555;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       margin-right: 30px;
@@ -238,7 +237,7 @@
       if(categoryLists[category]) {
         const lis = categoryLists[category].querySelectorAll('li');
         lis.forEach(li => {
-          if(li.textContent.startsWith(name + ' ')) {
+          if(li.textContent === `${name} (${x}, ${y})`) {
             li.remove();
           }
         });
@@ -274,17 +273,28 @@
         return;
       }
 
+      // 중복 마커 체크 (이름+좌표+카테고리 동일 여부)
+      const isDuplicate = savedMarkers.some(m =>
+        m.name === name && m.x === x && m.y === y && m.category === category
+      );
+      if(isDuplicate) {
+        alert('이미 동일한 마커가 존재합니다.');
+        return;
+      }
+
       const newMarker = { name, x, y, color, category };
       drawMarker(newMarker);
       saveMarker(newMarker);
       form.reset();
     });
 
-    // 지도 클릭 시 좌표 자동 입력
+    // 지도 클릭 시 좌표 자동 입력 (0~600 범위 내 제한)
     map.addEventListener('click', e => {
       const rect = map.getBoundingClientRect();
-      const x = Math.floor(e.clientX - rect.left);
-      const y = Math.floor(e.clientY - rect.top);
+      let x = Math.floor(e.clientX - rect.left);
+      let y = Math.floor(e.clientY - rect.top);
+      x = Math.min(Math.max(0, x), 600);
+      y = Math.min(Math.max(0, y), 600);
       document.getElementById('x').value = x;
       document.getElementById('y').value = y;
     });
