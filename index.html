@@ -2,193 +2,146 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>90K MAP</title>
+  <title>90K Map - ¿¬¸Í À§Ä¡ Ç¥½Ã</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
+      font-family: 'Malgun Gothic', '¸¼Àº °íµñ', 'Nanum Gothic', ³ª´®°íµñ, µ¸¿ò, Dotum, Helvetica, Arial, sans-serif;
       margin: 20px;
-      background: #f0f3f5;
-      color: #333;
-      user-select: none;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
     }
     #map-container {
       position: relative;
       width: 600px;
       height: 600px;
-      background-image: url('https://i.imgur.com/oNYHw3x.png'); /* ìˆ«ì ì—†ëŠ” ì‹¬í”Œ ì§€ë„ ì´ë¯¸ì§€ */
+      background-image: url('map.png');
       background-size: cover;
-      border: 2px solid #555;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-right: 30px;
+      border: 2px solid #333;
     }
     .marker {
       position: absolute;
       display: flex;
       align-items: center;
-      transform: translate(-50%, -100%);
+      transform: translate(-50%, -50%);
       cursor: pointer;
       white-space: nowrap;
+      color: white;
+      font-size: 12px;
+      text-shadow: 0 0 3px black;
     }
     .marker-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      flex-shrink: 0;
       margin-right: 6px;
-      box-shadow: 0 0 4px rgba(0,0,0,0.5);
-    }
-    .marker-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #222;
-      text-shadow: 0 0 2px white;
+      flex-shrink: 0;
+      border: 1.5px solid white;
+      background-color: red;
     }
     #sidebar {
-      width: 320px;
-    }
-    h1 {
-      margin-bottom: 10px;
-    }
-    form {
-      margin-bottom: 20px;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
-    }
-    label {
-      display: block;
-      margin: 8px 0 4px;
-      font-weight: 600;
-    }
-    input[type="text"], input[type="number"], select {
-      width: 100%;
-      padding: 6px 8px;
-      border: 1.5px solid #ccc;
-      border-radius: 4px;
+      width: 280px;
       font-size: 14px;
-      box-sizing: border-box;
     }
-    button {
-      margin-top: 12px;
-      width: 100%;
-      padding: 10px;
-      background-color: #3498db;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
-    .category {
-      margin-bottom: 25px;
-      background: white;
-      border-radius: 8px;
-      padding: 10px 12px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.05);
-    }
-    .category h3 {
-      margin: 0 0 10px 0;
-      font-weight: 700;
-      color: #555;
-      border-bottom: 2px solid #3498db;
+    #sidebar h2 {
+      margin-top: 0;
+      border-bottom: 2px solid #333;
       padding-bottom: 4px;
     }
-    .marker-list {
+    .category {
+      margin-bottom: 20px;
+    }
+    .category ul {
       list-style: none;
-      padding-left: 10px;
-      margin: 0;
+      padding-left: 5px;
       max-height: 130px;
       overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+    .category li {
+      padding: 3px 6px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+    .category li:last-child {
+      border-bottom: none;
+    }
+    form {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    form input, form select, form button {
+      padding: 6px 8px;
       font-size: 14px;
     }
-    .marker-list li {
-      margin-bottom: 6px;
-      cursor: default;
-      color: #333;
-      user-select: text;
+    form input[type="text"] {
+      flex: 1 1 100px;
+    }
+    form input[type="number"] {
+      width: 60px;
+    }
+    form button {
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+
   <div id="map-container"></div>
 
   <div id="sidebar">
-    <h1>90K MAP</h1>
+    <h2>¸¶Ä¿ µî·Ï</h2>
     <form id="marker-form">
-      <label for="name">ì´ë¦„</label>
-      <input type="text" id="name" required placeholder="ì´ë¦„ ì…ë ¥" />
-
-      <label for="x">X ì¢Œí‘œ (0 ~ 600)</label>
-      <input type="number" id="x" min="0" max="600" required />
-
-      <label for="y">Y ì¢Œí‘œ (0 ~ 600)</label>
-      <input type="number" id="y" min="0" max="600" required />
-
-      <label for="color">ìƒ‰ìƒ</label>
-      <select id="color" required>
-        <option value="#e74c3c" style="color:#e74c3c;">ë¹¨ê°•</option>
-        <option value="#e67e22" style="color:#e67e22;">ì£¼í™©</option>
-        <option value="#f1c40f" style="color:#f1c40f;">ë…¸ë‘</option>
-        <option value="#2ecc71" style="color:#2ecc71;">ì´ˆë¡</option>
-        <option value="#1abc9c" style="color:#1abc9c;">ì²­ë¡</option>
-        <option value="#3498db" style="color:#3498db;">íŒŒë‘</option>
-        <option value="#9b59b6" style="color:#9b59b6;">ë³´ë¼</option>
-        <option value="#7f8c8d" style="color:#7f8c8d;">íšŒìƒ‰</option>
-      </select>
-
-      <label for="category">ì¹´í…Œê³ ë¦¬</label>
+      ÀÌ¸§: <input type="text" id="name" required placeholder="ÀÌ¸§" />
+      X: <input type="number" id="x" min="0" max="600" required />
+      Y: <input type="number" id="y" min="0" max="600" required />
+      »ö»ó: <input type="color" id="color" value="#ff0000" />
+      Ä«Å×°í¸®:
       <select id="category" required>
-        <option value="ì§€ì›ì¡°">ì§€ì›ì¡°</option>
-        <option value="1ì¡°">1ì¡°</option>
-        <option value="2ì¡°">2ì¡°</option>
-        <option value="3ì¡°">3ì¡°</option>
+        <option value="">¼±ÅÃ</option>
+        <option value="¿¬¸Í">¿¬¸Í</option>
+        <option value="ÆÀ">ÆÀ</option>
+        <option value="±âÁö">±âÁö</option>
+        <option value="±âÅ¸">±âÅ¸</option>
       </select>
-
-      <button type="submit">ì¶”ê°€</button>
+      <button type="submit">Ãß°¡</button>
     </form>
 
     <div class="category">
-      <h3>ì§€ì›ì¡°</h3>
-      <ul id="list-support" class="marker-list"></ul>
+      <h2>¿¬¸Í</h2>
+      <ul id="list-¿¬¸Í"></ul>
     </div>
     <div class="category">
-      <h3>1ì¡°</h3>
-      <ul id="list-team1" class="marker-list"></ul>
+      <h2>ÆÀ</h2>
+      <ul id="list-ÆÀ"></ul>
     </div>
     <div class="category">
-      <h3>2ì¡°</h3>
-      <ul id="list-team2" class="marker-list"></ul>
+      <h2>±âÁö</h2>
+      <ul id="list-±âÁö"></ul>
     </div>
     <div class="category">
-      <h3>3ì¡°</h3>
-      <ul id="list-team3" class="marker-list"></ul>
+      <h2>±âÅ¸</h2>
+      <ul id="list-±âÅ¸"></ul>
     </div>
   </div>
 
   <script>
-    const form = document.getElementById('marker-form');
     const map = document.getElementById('map-container');
+    const form = document.getElementById('marker-form');
 
-    let savedMarkers = JSON.parse(localStorage.getItem('markers') || '[]');
+    // ÀúÀåµÈ ¸¶Ä¿ ºÒ·¯¿À±â (localStorage)
+    let markers = JSON.parse(localStorage.getItem('markers') || '[]');
 
-    const categoryLists = {
-      'ì§€ì›ì¡°': document.getElementById('list-support'),
-      '1ì¡°': document.getElementById('list-team1'),
-      '2ì¡°': document.getElementById('list-team2'),
-      '3ì¡°': document.getElementById('list-team3'),
-    };
+    function saveMarkers() {
+      localStorage.setItem('markers', JSON.stringify(markers));
+    }
 
-    function drawMarker({ name, x, y, color, category }) {
+    function createMarkerElement({name, x, y, color, category}) {
       const marker = document.createElement('div');
       marker.className = 'marker';
       marker.style.left = x + 'px';
@@ -199,94 +152,97 @@
       dot.style.backgroundColor = color;
 
       const label = document.createElement('span');
-      label.className = 'marker-label';
       label.textContent = name;
 
       marker.appendChild(dot);
       marker.appendChild(label);
 
-      marker.title = `'${name}' ë§ˆì»¤ ì‚­ì œí•˜ë ¤ë©´ í´ë¦­í•˜ì„¸ìš”`;
+      marker.title = `${name} (${category})\nÅ¬¸¯ÇÏ¸é »èÁ¦µË´Ï´Ù.`;
+
       marker.addEventListener('click', () => {
-        if(confirm(`'${name}' ë§ˆì»¤ë¥¼ ì‚­ì œí• ê¹Œìš”?`)) {
-          marker.remove();
-          deleteMarker(name, x, y, category);
+        if(confirm(`'${name}' ¸¶Ä¿¸¦ »èÁ¦ÇÒ±î¿ä?`)) {
+          map.removeChild(marker);
+          markers = markers.filter(m => !(m.name === name && m.x === x && m.y === y && m.category === category));
+          saveMarkers();
+          renderLists();
         }
       });
 
+      return marker;
+    }
+
+    function drawMarker(markerData) {
+      const marker = createMarkerElement(markerData);
       map.appendChild(marker);
-
-      // ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
-      if(categoryLists[category]) {
-        const li = document.createElement('li');
-        li.textContent = `${name} (${x}, ${y})`;
-        categoryLists[category].appendChild(li);
-      }
     }
 
-    function saveMarker(marker) {
-      savedMarkers.push(marker);
-      localStorage.setItem('markers', JSON.stringify(savedMarkers));
+    function renderMarkers() {
+      map.querySelectorAll('.marker').forEach(el => el.remove());
+      markers.forEach(drawMarker);
     }
 
-    function deleteMarker(name, x, y, category) {
-      savedMarkers = savedMarkers.filter(m =>
-        !(m.name === name && m.x === x && m.y === y && m.category === category)
-      );
-      localStorage.setItem('markers', JSON.stringify(savedMarkers));
-
-      if(categoryLists[category]) {
-        const lis = categoryLists[category].querySelectorAll('li');
-        lis.forEach(li => {
-          if(li.textContent.startsWith(name + ' ')) {
-            li.remove();
-          }
+    // Ä«Å×°í¸®º° ¸®½ºÆ® ·»´õ¸µ
+    function renderLists() {
+      const categories = ['¿¬¸Í', 'ÆÀ', '±âÁö', '±âÅ¸'];
+      categories.forEach(cat => {
+        const ul = document.getElementById(`list-${cat}`);
+        ul.innerHTML = '';
+        markers.filter(m => m.category === cat).forEach(m => {
+          const li = document.createElement('li');
+          li.textContent = m.name;
+          li.style.color = m.color;
+          li.title = `(${m.x}, ${m.y})`;
+          li.addEventListener('click', () => {
+            alert(`${m.name}\nÄ«Å×°í¸®: ${m.category}\nÁÂÇ¥: (${m.x}, ${m.y})`);
+          });
+          ul.appendChild(li);
         });
-      }
+      });
     }
-
-    // ì €ì¥ëœ ë§ˆì»¤ ë‹¤ì‹œ ë¶ˆëŸ¬ì˜¤ê¸° ë° ê·¸ë¦¬ê¸°
-    function loadMarkers() {
-      // ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
-      for(let cat in categoryLists) {
-        categoryLists[cat].innerHTML = '';
-      }
-      // ì§€ë„ì—ì„œ ê¸°ì¡´ ë§ˆì»¤ ë‹¤ ì œê±°
-      while(map.firstChild) {
-        map.removeChild(map.firstChild);
-      }
-      savedMarkers.forEach(drawMarker);
-    }
-
-    loadMarkers();
 
     form.addEventListener('submit', e => {
       e.preventDefault();
+      const name = form.name.value.trim();
+      const x = parseInt(form.x.value);
+      const y = parseInt(form.y.value);
+      const color = form.color.value;
+      const category = form.category.value;
 
-      const name = document.getElementById('name').value.trim();
-      const x = parseInt(document.getElementById('x').value);
-      const y = parseInt(document.getElementById('y').value);
-      const color = document.getElementById('color').value;
-      const category = document.getElementById('category').value;
-
-      if(x < 0 || x > 600 || y < 0 || y > 600) {
-        alert('ì¢Œí‘œëŠ” 0ì—ì„œ 600 ì‚¬ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.');
+      if(!name) {
+        alert('ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.');
+        return;
+      }
+      if(isNaN(x) || x < 0 || x > 600 || isNaN(y) || y < 0 || y > 600) {
+        alert('ÁÂÇ¥´Â 0~600 »çÀÌ¿©¾ß ÇÕ´Ï´Ù.');
+        return;
+      }
+      if(!category) {
+        alert('Ä«Å×°í¸®¸¦ ¼±ÅÃÇØÁÖ¼¼¿ä.');
         return;
       }
 
-      const newMarker = { name, x, y, color, category };
-      drawMarker(newMarker);
-      saveMarker(newMarker);
+      const markerData = {name, x, y, color, category};
+      markers.push(markerData);
+      saveMarkers();
+      drawMarker(markerData);
+      renderLists();
+
       form.reset();
     });
 
-    // ì§€ë„ í´ë¦­ ì‹œ ì¢Œí‘œ ìë™ ì…ë ¥
+    // Áöµµ Å¬¸¯ÇÏ¸é ÁÂÇ¥ ÀÔ·Â
     map.addEventListener('click', e => {
       const rect = map.getBoundingClientRect();
       const x = Math.floor(e.clientX - rect.left);
       const y = Math.floor(e.clientY - rect.top);
-      document.getElementById('x').value = x;
-      document.getElementById('y').value = y;
+      form.x.value = x;
+      form.y.value = y;
     });
+
+    // ÃÊ±â ·»´õ¸µ
+    renderMarkers();
+    renderLists();
   </script>
+
 </body>
 </html>
