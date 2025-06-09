@@ -2,157 +2,147 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>90K MAP</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin: 20px;
-      background: #f0f3f5;
-      color: #333;
-      user-select: none;
+      gap: 20px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
     }
+
     #map-container {
-      position: relative;
       width: 600px;
       height: 600px;
+      border: 2px solid #333;
       background-image: url('grid.png');
       background-size: cover;
-      border: 2px solid #555;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-right: 30px;
+      position: relative;
     }
+
     .marker {
       position: absolute;
+      transform: translate(-50%, -100%);
       display: flex;
       align-items: center;
-      transform: translate(-50%, -100%);
-      cursor: pointer;
-      white-space: nowrap;
     }
+
     .marker-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      flex-shrink: 0;
       margin-right: 6px;
-      box-shadow: 0 0 4px rgba(0,0,0,0.5);
     }
+
     .marker-label {
       font-size: 13px;
-      font-weight: 600;
-      color: #222;
-      text-shadow: 0 0 2px white;
-    }
-    #sidebar {
-      width: 320px;
-    }
-    h1 {
-      margin-bottom: 10px;
-    }
-    form {
-      margin-bottom: 20px;
+      font-weight: bold;
       background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
-    }
-    label {
-      display: block;
-      margin: 8px 0 4px;
-      font-weight: 600;
-    }
-    input[type="text"], input[type="number"], select {
-      width: 100%;
-      padding: 6px 8px;
-      border: 1.5px solid #ccc;
+      padding: 2px 4px;
       border-radius: 4px;
-      font-size: 14px;
-      box-sizing: border-box;
+      box-shadow: 0 0 2px #aaa;
     }
-    button {
-      margin-top: 12px;
+
+    #form-container {
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    form {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 8px;
+      display: block;
+    }
+
+    input, select, button {
       width: 100%;
-      padding: 10px;
-      background-color: #3498db;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin-top: 4px;
+      padding: 6px;
+      font-size: 14px;
     }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
     button:hover {
       background-color: #2980b9;
     }
 
-    /* 새롭게 추가된 가로 정렬 CSS */
     #category-container {
       display: flex;
       flex-direction: row;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 10px;
+      width: 400px;
     }
-    .category {
+
+    .category-box {
       background: white;
-      border-radius: 8px;
-      padding: 10px 12px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.05);
+      padding: 10px;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
       flex: 1 1 120px;
-      max-width: 140px;
     }
-    .category h3 {
-      margin: 0 0 10px 0;
-      font-weight: 700;
-      color: #555;
-      border-bottom: 2px solid #3498db;
+
+    .category-box h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      border-bottom: 1px solid #ccc;
       padding-bottom: 4px;
     }
+
     .marker-list {
       list-style: none;
       padding-left: 10px;
       margin: 0;
-      max-height: 130px;
+      font-size: 13px;
+      max-height: 120px;
       overflow-y: auto;
-      font-size: 14px;
     }
+
     .marker-list li {
-      margin-bottom: 6px;
-      cursor: default;
-      color: #333;
-      user-select: text;
+      margin-bottom: 4px;
     }
   </style>
 </head>
 <body>
+
   <div id="map-container"></div>
 
-  <div id="sidebar">
-    <h1>90K MAP</h1>
+  <div id="form-container">
     <form id="marker-form">
       <label for="name">이름</label>
-      <input type="text" id="name" required placeholder="이름 입력" />
+      <input type="text" id="name" required />
 
-      <label for="x">X 좌표 (0 ~ 600)</label>
+      <label for="x">X (0~600)</label>
       <input type="number" id="x" min="0" max="600" required />
 
-      <label for="y">Y 좌표 (0 ~ 600)</label>
+      <label for="y">Y (0~600)</label>
       <input type="number" id="y" min="0" max="600" required />
 
       <label for="color">색상</label>
       <select id="color" required>
         <option value="#e74c3c">빨강</option>
-        <option value="#e67e22">주황</option>
-        <option value="#f1c40f">노랑</option>
-        <option value="#2ecc71">초록</option>
-        <option value="#1abc9c">청록</option>
         <option value="#3498db">파랑</option>
+        <option value="#2ecc71">초록</option>
+        <option value="#f1c40f">노랑</option>
         <option value="#9b59b6">보라</option>
-        <option value="#7f8c8d">회색</option>
       </select>
 
       <label for="category">카테고리</label>
@@ -161,139 +151,103 @@
         <option value="1조">1조</option>
         <option value="2조">2조</option>
         <option value="3조">3조</option>
+        <option value="적맹주">적맹주</option>
       </select>
 
-      <button type="submit">추가</button>
+      <button type="submit">마커 추가</button>
     </form>
+  </div>
 
-    <!-- 가로 정렬된 카테고리 컨테이너 -->
-    <div id="category-container">
-      <div class="category">
-        <h3>지원조</h3>
-        <ul id="list-support" class="marker-list"></ul>
-      </div>
-      <div class="category">
-        <h3>1조</h3>
-        <ul id="list-team1" class="marker-list"></ul>
-      </div>
-      <div class="category">
-        <h3>2조</h3>
-        <ul id="list-team2" class="marker-list"></ul>
-      </div>
-      <div class="category">
-        <h3>3조</h3>
-        <ul id="list-team3" class="marker-list"></ul>
-      </div>
+  <div id="category-container">
+    <div class="category-box">
+      <h3>지원조</h3>
+      <ul id="list-지원조" class="marker-list"></ul>
+    </div>
+    <div class="category-box">
+      <h3>1조</h3>
+      <ul id="list-1조" class="marker-list"></ul>
+    </div>
+    <div class="category-box">
+      <h3>2조</h3>
+      <ul id="list-2조" class="marker-list"></ul>
+    </div>
+    <div class="category-box">
+      <h3>3조</h3>
+      <ul id="list-3조" class="marker-list"></ul>
+    </div>
+    <div class="category-box">
+      <h3>적맹주</h3>
+      <ul id="list-적맹주" class="marker-list"></ul>
     </div>
   </div>
 
   <script>
-    const form = document.getElementById('marker-form');
     const map = document.getElementById('map-container');
-
-    let savedMarkers = JSON.parse(localStorage.getItem('markers') || '[]');
+    const form = document.getElementById('marker-form');
+    const markers = JSON.parse(localStorage.getItem('markers') || '[]');
 
     const categoryLists = {
-      '지원조': document.getElementById('list-support'),
-      '1조': document.getElementById('list-team1'),
-      '2조': document.getElementById('list-team2'),
-      '3조': document.getElementById('list-team3'),
+      '지원조': document.getElementById('list-지원조'),
+      '1조': document.getElementById('list-1조'),
+      '2조': document.getElementById('list-2조'),
+      '3조': document.getElementById('list-3조'),
+      '적맹주': document.getElementById('list-적맹주'),
     };
 
-    function drawMarker({ name, x, y, color, category }) {
-      const marker = document.createElement('div');
-      marker.className = 'marker';
-      marker.style.left = x + 'px';
-      marker.style.top = y + 'px';
+    function renderMarker({ name, x, y, color, category }) {
+      const div = document.createElement('div');
+      div.className = 'marker';
+      div.style.left = `${x}px`;
+      div.style.top = `${y}px`;
 
       const dot = document.createElement('div');
       dot.className = 'marker-dot';
       dot.style.backgroundColor = color;
 
-      const label = document.createElement('span');
+      const label = document.createElement('div');
       label.className = 'marker-label';
       label.textContent = name;
 
-      marker.appendChild(dot);
-      marker.appendChild(label);
+      div.appendChild(dot);
+      div.appendChild(label);
+      map.appendChild(div);
 
-      marker.title = `'${name}' 마커 삭제하려면 클릭하세요`;
-      marker.addEventListener('click', () => {
-        if(confirm(`'${name}' 마커를 삭제할까요?`)) {
-          marker.remove();
-          deleteMarker(name, x, y, category);
-        }
-      });
-
-      map.appendChild(marker);
-
-      if(categoryLists[category]) {
-        const li = document.createElement('li');
-        li.textContent = `${name} (${x}, ${y})`;
-        categoryLists[category].appendChild(li);
-      }
-    }
-
-    function saveMarker(marker) {
-      savedMarkers.push(marker);
-      localStorage.setItem('markers', JSON.stringify(savedMarkers));
-    }
-
-    function deleteMarker(name, x, y, category) {
-      savedMarkers = savedMarkers.filter(m =>
-        !(m.name === name && m.x === x && m.y === y && m.category === category)
-      );
-      localStorage.setItem('markers', JSON.stringify(savedMarkers));
-
-      if(categoryLists[category]) {
-        const lis = categoryLists[category].querySelectorAll('li');
-        lis.forEach(li => {
-          if(li.textContent.startsWith(name + ' ')) {
-            li.remove();
-          }
-        });
-      }
+      const li = document.createElement('li');
+      li.textContent = `${name} (${x}, ${y})`;
+      categoryLists[category].appendChild(li);
     }
 
     function loadMarkers() {
-      for(let cat in categoryLists) {
-        categoryLists[cat].innerHTML = '';
-      }
-      while(map.firstChild) {
-        map.removeChild(map.firstChild);
-      }
-      savedMarkers.forEach(drawMarker);
+      map.innerHTML = '';
+      Object.values(categoryLists).forEach(list => list.innerHTML = '');
+      markers.forEach(renderMarker);
     }
-
-    loadMarkers();
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-
       const name = document.getElementById('name').value.trim();
       const x = parseInt(document.getElementById('x').value);
       const y = parseInt(document.getElementById('y').value);
       const color = document.getElementById('color').value;
       const category = document.getElementById('category').value;
 
-      if(x < 0 || x > 600 || y < 0 || y > 600) {
-        alert('좌표는 0에서 600 사이여야 합니다.');
-        return;
-      }
+      if (!categoryLists[category]) return;
 
-      const newMarker = { name, x, y, color, category };
-      drawMarker(newMarker);
-      saveMarker(newMarker);
+      const marker = { name, x, y, color, category };
+      markers.push(marker);
+      localStorage.setItem('markers', JSON.stringify(markers));
+      renderMarker(marker);
       form.reset();
     });
 
     map.addEventListener('click', e => {
       const rect = map.getBoundingClientRect();
-      const x = Math.floor(e.clientX - rect.left);
-      const y = Math.floor(e.clientY - rect.top);
-      document.getElementById('x').value = x;
-      document.getElementById('y').value = y;
+      document.getElementById('x').value = Math.floor(e.clientX - rect.left);
+      document.getElementById('y').value = Math.floor(e.clientY - rect.top);
     });
+
+    loadMarkers();
   </script>
+
 </body>
 </html>
