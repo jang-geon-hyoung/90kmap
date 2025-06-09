@@ -104,29 +104,29 @@
       카테고리:
       <select id="category" required>
         <option value="">선택</option>
-        <option value="연맹">연맹</option>
-        <option value="팀">팀</option>
-        <option value="기지">기지</option>
-        <option value="기타">기타</option>
+        <option value="지원조">지원조</option>
+        <option value="1조">1조</option>
+        <option value="2조">2조</option>
+        <option value="3조">3조</option>
       </select>
       <button type="submit">추가</button>
     </form>
 
     <div class="category">
-      <h2>연맹</h2>
-      <ul id="list-연맹"></ul>
+      <h2>지원조</h2>
+      <ul id="list-지원조"></ul>
     </div>
     <div class="category">
-      <h2>팀</h2>
-      <ul id="list-팀"></ul>
+      <h2>1조</h2>
+      <ul id="list-1조"></ul>
     </div>
     <div class="category">
-      <h2>기지</h2>
-      <ul id="list-기지"></ul>
+      <h2>2조</h2>
+      <ul id="list-2조"></ul>
     </div>
     <div class="category">
-      <h2>기타</h2>
-      <ul id="list-기타"></ul>
+      <h2>3조</h2>
+      <ul id="list-3조"></ul>
     </div>
   </div>
 
@@ -183,7 +183,7 @@
 
     // 카테고리별 리스트 렌더링
     function renderLists() {
-      const categories = ['연맹', '팀', '기지', '기타'];
+      const categories = ['지원조', '1조', '2조', '3조'];
       categories.forEach(cat => {
         const ul = document.getElementById(`list-${cat}`);
         ul.innerHTML = '';
