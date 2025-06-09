@@ -1,3 +1,91 @@
+.marker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Á¡(¡Ü) ½ºÅ¸ÀÏ */
+.marker-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: red; /* ±âº» »ö»ó */
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+
+/* ÀÌ¸§ ÅØ½ºÆ® ½ºÅ¸ÀÏ */
+.marker-label {
+  color: white;
+  font-size: 12px;
+  text-shadow: 0 0 2px black;
+}
+js
+º¹»ç
+ÆíÁı
+function drawMarker({ name, x, y, color }) {
+  const marker = document.createElement('div');
+  marker.className = 'marker';
+  marker.style.left = x + 'px';
+  marker.style.top = y + 'px';
+
+  // Á¡ ¸¸µé±â
+  const dot = document.createElement('div');
+  dot.className = 'marker-dot';
+  dot.style.backgroundColor = color;
+
+  // ÀÌ¸§ ÅØ½ºÆ® ¸¸µé±â
+  const label = document.createElement('span');
+  label.className = 'marker-label';
+  label.textContent = name;
+
+  // Á¡°ú ÀÌ¸§À» marker¿¡ ºÙÀÓ
+  marker.appendChild(dot);
+  marker.appendChild(label);
+
+  marker.title = 'Å¬¸¯ÇÏ¸é »èÁ¦µË´Ï´Ù';
+
+  marker.addEventListener('click', () => {
+    if (confirm(`'${name}' ¸¶Ä¿¸¦ »èÁ¦ÇÒ±î¿ä?`)) {
+      marker.remove();
+      deleteMarker(name, x, y);
+    }
+  });
+
+  map.appendChild(marker);
+}
+¿äÁ¡
+.marker´Â flex·Î Á¡°ú ÀÌ¸§À» °¡·Î·Î Á¤·Ä
+
+.marker-dot°¡ ÀÛÀº ¿ø(¡Ü) ¿ªÇÒ
+
+.marker-labelÀÌ ÀÌ¸§ ÅØ½ºÆ® ¿ªÇÒ
+
+drawMarker ÇÔ¼ö ³»ºÎ¿¡¼­ div ÇÏ³ª ´ë½Å Á¡°ú ÅØ½ºÆ®¸¦ º°µµ »ı¼ºÇØ¼­ ºÙÀÓ
+
+ÇÊ¿äÇÏ¸é ÀüÃ¼ ¼öÁ¤µÈ ÄÚµåµµ ÇÑ ¹ø¿¡ º¸³»µå¸±°Ô¿ä!
+ÀÏ´Ü ¿©±â¿¡ ºÙ¿©¼­ Àû¿ëÇØ º¸½Ã°í, ±Ã±İÇÑ Á¡ ÀÖÀ¸¸é ¾Ë·Á ÁÖ¼¼¿ä :)
+
+
+
+
+
+
+
+³ªÀÇ ¸»:
+ÀüÃ¼ ¼öÁ¤µÈ ÄÚµå º¸³»Áà
+
+
+ChatGPTÀÇ ¸»:
+¾Æ·¡´Â ¿äÃ»ÇÏ½Å ´ë·Î ¡°Áöµµ¿¡ Á¡(¡Ü) Ç¥½Ã + ¿·¿¡ ÀÌ¸§ ÅØ½ºÆ®¡±°¡ Ç¥½ÃµÇµµ·Ï ÀüÃ¼ ¼öÁ¤ÇÑ HTML ÄÚµåÀÔ´Ï´Ù.
+±âÁ¸ ½ºÅ¸ÀÏ°ú JS ÄÚµå¸¦ ¸ğµÎ ¹Ù²ã¼­ µ¿ÀÛÇÏµµ·Ï Çß¾î¿ä.
+
+html
+º¹»ç
+ÆíÁı
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,11 +94,13 @@
   <title>90K Map</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: 20px;
+      background: #222;
+      color: white;
     }
     #map-container {
       position: relative;
@@ -22,13 +112,25 @@
     }
     .marker {
       position: absolute;
-      color: white;
-      font-size: 12px;
-      padding: 2px 4px;
-      border-radius: 6px;
-      transform: translate(-50%, -100%);
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      transform: translate(-50%, -50%);
       cursor: pointer;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .marker-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: red;
+      flex-shrink: 0;
+      margin-right: 6px;
+      box-shadow: 0 0 3px black;
+    }
+    .marker-label {
+      font-size: 12px;
+      text-shadow: 0 0 3px black;
     }
     form {
       margin-top: 20px;
@@ -36,9 +138,12 @@
     input, select {
       margin: 0 5px;
       padding: 5px;
+      font-size: 14px;
     }
     button {
       padding: 5px 10px;
+      font-size: 14px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -48,12 +153,12 @@
   <div id="map-container"></div>
 
   <form id="marker-form">
-    ì´ë¦„: <input type="text" id="name" required />
+    ÀÌ¸§: <input type="text" id="name" required />
     X: <input type="number" id="x" min="0" max="600" required />
     Y: <input type="number" id="y" min="0" max="600" required />
-    ìƒ‰ìƒ:
+    »ö»ó:
     <input type="color" id="color" value="#ff0000" />
-    <button type="submit">ì¶”ê°€</button>
+    <button type="submit">Ãß°¡</button>
   </form>
 
   <script>
@@ -71,7 +176,7 @@
       const color = document.getElementById('color').value;
 
       if (x < 0 || x > 600 || y < 0 || y > 600) {
-        alert("ì¢Œí‘œëŠ” 0~600 ì‚¬ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
+        alert("ÁÂÇ¥´Â 0~600 »çÀÌ¿©¾ß ÇÕ´Ï´Ù.");
         return;
       }
 
@@ -86,12 +191,24 @@
       marker.className = 'marker';
       marker.style.left = x + 'px';
       marker.style.top = y + 'px';
-      marker.style.backgroundColor = color;
-      marker.textContent = name;
-      marker.title = 'í´ë¦­í•˜ë©´ ì‚­ì œë©ë‹ˆë‹¤';
+
+      // Á¡(¡Ü) »ı¼º
+      const dot = document.createElement('div');
+      dot.className = 'marker-dot';
+      dot.style.backgroundColor = color;
+
+      // ÀÌ¸§ ÅØ½ºÆ® »ı¼º
+      const label = document.createElement('span');
+      label.className = 'marker-label';
+      label.textContent = name;
+
+      marker.appendChild(dot);
+      marker.appendChild(label);
+
+      marker.title = 'Å¬¸¯ÇÏ¸é »èÁ¦µË´Ï´Ù';
 
       marker.addEventListener('click', () => {
-        if (confirm(`'${name}' ë§ˆì»¤ë¥¼ ì‚­ì œí• ê¹Œìš”?`)) {
+        if (confirm(`'${name}' ¸¶Ä¿¸¦ »èÁ¦ÇÒ±î¿ä?`)) {
           marker.remove();
           deleteMarker(name, x, y);
         }
@@ -112,7 +229,7 @@
       localStorage.setItem('markers', JSON.stringify(markers));
     }
 
-    // ì§€ë„ í´ë¦­ ì‹œ ì¢Œí‘œ ìë™ ì…ë ¥
+    // Áöµµ Å¬¸¯ ½Ã ÁÂÇ¥ ÀÚµ¿ ÀÔ·Â
     map.addEventListener('click', (e) => {
       const rect = map.getBoundingClientRect();
       const x = Math.floor(e.clientX - rect.left);
